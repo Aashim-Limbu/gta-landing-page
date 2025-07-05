@@ -1,11 +1,12 @@
-import {useGSAP} from "@gsap/react";
 import gsap from "gsap";
+import {useGSAP} from "@gsap/react";
 import {useRef} from "react";
 
-export default function PostCard() {
+const PostCard = () => {
     const videoRef = useRef<null | HTMLVideoElement>(null);
+
     useGSAP(() => {
-        const timeline = gsap.timeline({
+        const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: ".post-card",
                 start: "top center",
@@ -13,25 +14,37 @@ export default function PostCard() {
                 scrub: true,
             },
         });
+
         if (videoRef && videoRef.current) {
             videoRef.current.onloadedmetadata = () => {
-                if (!videoRef.current) return;
-                timeline.to(
-                    videoRef.current,
-                    {currentTime: videoRef.current.duration, duration: 3, ease: "power1.inOut"},
-                    "< "
-                );
+                if (videoRef.current) {
+                    tl.to(
+                        videoRef.current,
+                        {
+                            currentTime: videoRef.current.duration,
+                            duration: 3,
+                            ease: "power1.inOut",
+                        },
+                        "<"
+                    );
+                }
             };
         }
     });
+
     return (
         <section className="post-card">
             <div className="animated-gradient-bg" />
+
             <div className="post-card-wrapper group hover:rotate-1 hover:-[1.02] transition duration-700">
-                <img src="/images/overlay.webp" alt="post" />
+                <img src="/images/overlay.webp" />
+
                 <video ref={videoRef} muted playsInline preload="auto" src="/videos/postcard-vd.mp4" />
-                <button className="group-hover:bg-yellow transition duration-700">Explore Leonida</button>
+
+                <button className="group-hover:bg-yellow transation duration-700">Explore Leonida Keys</button>
             </div>
         </section>
     );
-}
+};
+
+export default PostCard;
